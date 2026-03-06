@@ -22,7 +22,7 @@ const Navbar = () => {
               {item}
             </a>
           ))}
-          <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold">
+          <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
             Start Building
           </Button>
         </div>
@@ -44,7 +44,7 @@ const Navbar = () => {
               {item}
             </a>
           ))}
-          <Button size="sm" className="w-full bg-primary text-primary-foreground">Start Building</Button>
+          <Button size="sm" className="w-full bg-primary text-primary-foreground" onClick={() => { setIsOpen(false); document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); }}>Start Building</Button>
         </div>
       )}
     </nav>
