@@ -53,10 +53,10 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.45 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-base px-8 glow-border">
+          <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-base px-8 glow-border" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
             Start Building <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-          <Button size="lg" variant="outline" className="border-border/50 text-foreground hover:bg-secondary font-semibold text-base px-8">
+          <Button size="lg" variant="outline" className="border-border/50 text-foreground hover:bg-secondary font-semibold text-base px-8" onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}>
             <Play className="mr-2 h-4 w-4" /> See How It Works
           </Button>
         </motion.div>
