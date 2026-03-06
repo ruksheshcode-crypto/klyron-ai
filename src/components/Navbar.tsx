@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X, LogOut, User } from "lucide-react";
+import { Menu, X, LogOut, User, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -35,8 +35,10 @@ const Navbar = () => {
               {item}
             </a>
           ))}
-          <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
-            Start Building
+          <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold" asChild>
+            <a href="mailto:ruksheshcode@gmail.com?subject=Early%20Access%20Request&body=I%20want%20my%20self%20to%20be%20registered%20for%20the%20early%20access%20of%20the%20vibe%20coding%20tool">
+              <Mail className="mr-2 h-3.5 w-3.5" /> Early Access
+            </a>
           </Button>
 
           {user ? (
@@ -82,7 +84,11 @@ const Navbar = () => {
               {item}
             </a>
           ))}
-          <Button size="sm" className="w-full bg-primary text-primary-foreground" onClick={() => { setIsOpen(false); document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); }}>Start Building</Button>
+          <Button size="sm" className="w-full bg-primary text-primary-foreground" asChild>
+            <a href="mailto:ruksheshcode@gmail.com?subject=Early%20Access%20Request&body=I%20want%20my%20self%20to%20be%20registered%20for%20the%20early%20access%20of%20the%20vibe%20coding%20tool" onClick={() => setIsOpen(false)}>
+              <Mail className="mr-2 h-3.5 w-3.5" /> Early Access
+            </a>
+          </Button>
           {user ? (
             <Button size="sm" variant="outline" className="w-full border-border/50 text-destructive" onClick={() => { setIsOpen(false); signOut(); }}>
               <LogOut className="mr-2 h-4 w-4" /> Sign Out
