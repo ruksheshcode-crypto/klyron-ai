@@ -1,9 +1,22 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const userInitial = user?.user_metadata?.full_name?.[0] || user?.email?.[0] || "U";
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/30">
@@ -25,6 +38,31 @@ const Navbar = () => {
           <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold" onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
             Start Building
           </Button>
+
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 outline-none">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.user_metadata?.avatar_url || user.user_metadata?.picture} />
+                    <AvatarFallback className="bg-primary/20 text-primary text-sm">{userInitial}</AvatarFallback>
+                  </Avatar>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem className="text-muted-foreground text-xs cursor-default">
+                  {user.email}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={signOut} className="text-destructive cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" /> Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button size="sm" variant="outline" className="border-border/50" onClick={() => navigate("/auth")}>
+              Sign In
+            </Button>
+          )}
         </div>
 
         <button className="md:hidden text-foreground" onClick={() => setIsOpen(!isOpen)}>
@@ -45,6 +83,15 @@ const Navbar = () => {
             </a>
           ))}
           <Button size="sm" className="w-full bg-primary text-primary-foreground" onClick={() => { setIsOpen(false); document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); }}>Start Building</Button>
+          {user ? (
+            <Button size="sm" variant="outline" className="w-full border-border/50 text-destructive" onClick={() => { setIsOpen(false); signOut(); }}>
+              <LogOut className="mr-2 h-4 w-4" /> Sign Out
+            </Button>
+          ) : (
+            <Button size="sm" variant="outline" className="w-full border-border/50" onClick={() => { setIsOpen(false); navigate("/auth"); }}>
+              Sign In
+            </Button>
+          )}
         </div>
       )}
     </nav>
