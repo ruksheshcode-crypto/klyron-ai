@@ -8,7 +8,7 @@ const timeline = [
 ];
 
 const AboutSection = () => (
-  <section className="py-28 relative">
+  <section id="about" className="py-28 relative">
     <div className="section-container">
       <div className="grid lg:grid-cols-2 gap-16 items-center">
         <motion.div
