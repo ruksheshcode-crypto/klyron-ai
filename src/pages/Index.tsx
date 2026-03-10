@@ -1,4 +1,5 @@
 import Navbar from "@/components/Navbar";
+import CursorCodeEffect from "@/components/CursorCodeEffect";
 import HeroSection from "@/components/HeroSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import FeaturesSection from "@/components/FeaturesSection";
