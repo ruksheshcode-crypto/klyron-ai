@@ -1,48 +1,82 @@
 import { motion } from "framer-motion";
-import { MessageSquare, Sparkles, Sliders, Rocket } from "lucide-react";
+import { MessageSquare, Brain, Zap, CheckCircle } from "lucide-react";
 
 const steps = [
-  { icon: MessageSquare, num: "01", title: "Describe What You Want", desc: "Tell Klyron what you need in plain language — an app, a workflow, a dashboard, or an entire system." },
-  { icon: Sparkles, num: "02", title: "AI Generates the System", desc: "Klyron's AI engine builds your software architecture, logic, and interfaces in seconds." },
-  { icon: Sliders, num: "03", title: "Customize & Refine", desc: "Fine-tune your platform with visual tools and natural language commands until it's exactly right." },
-  { icon: Rocket, num: "04", title: "Launch & Scale", desc: "Deploy your business infrastructure and let AI agents run your operations while you grow." },
+  {
+    icon: MessageSquare,
+    num: "01",
+    title: "State Your Task",
+    desc: '"Edit my video" or "Create a presentation" — just say what you need.',
+    example: "Create a presentation →",
+  },
+  {
+    icon: Brain,
+    num: "02",
+    title: "AI Understands Intent",
+    desc: "The system analyzes your request, context, and preferences to determine exactly what you need.",
+    example: "Parsing intent...",
+  },
+  {
+    icon: Zap,
+    num: "03",
+    title: "Tool Generated Instantly",
+    desc: "A purpose-built interface appears in milliseconds — no downloads, no installations, no waiting.",
+    example: "Generating editor...",
+  },
+  {
+    icon: CheckCircle,
+    num: "04",
+    title: "Complete Seamlessly",
+    desc: "Work with a tool perfectly tailored to your task. When done, it dissolves — no clutter, no bloat.",
+    example: "Task complete ✓",
+  },
 ];
 
 const HowItWorksSection = () => (
-  <section id="how-it-works" className="py-24 relative">
-    <div className="section-container">
+  <section id="how-it-works" className="py-28 relative">
+    <div className="absolute inset-0 grid-bg opacity-50" />
+    <div className="relative section-container">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="text-center mb-16"
+        className="text-center mb-20"
       >
-        <p className="text-primary text-sm font-semibold tracking-widest uppercase mb-3">How It Works</p>
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
-          From Idea to Infrastructure in{" "}
-          <span className="gradient-text">Minutes</span>
+        <span className="font-mono text-xs tracking-widest text-primary/70 uppercase">Process</span>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mt-3 mb-4">
+          How It <span className="gradient-text">Works</span>
         </h2>
+        <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+          Four steps from thought to execution. No apps required.
+        </p>
       </motion.div>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-4 gap-8">
         {steps.map((s, i) => (
           <motion.div
             key={s.num}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            className="relative text-center"
+            transition={{ delay: i * 0.12 }}
+            className="relative"
           >
+            {/* Connector line */}
             {i < steps.length - 1 && (
-              <div className="hidden lg:block absolute top-12 left-[60%] w-[80%] h-px bg-gradient-to-r from-primary/30 to-transparent" />
+              <div className="hidden md:block absolute top-8 left-[60%] w-[80%] h-px bg-gradient-to-r from-primary/20 to-transparent" />
             )}
-            <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4 gradient-border">
-              <s.icon className="h-6 w-6 text-primary" />
+
+            <div className="text-center">
+              <div className="w-16 h-16 rounded-2xl glass gradient-border flex items-center justify-center mx-auto mb-5">
+                <s.icon className="h-7 w-7 text-primary" />
+              </div>
+              <span className="font-mono text-xs text-primary/60 tracking-wider">{s.num}</span>
+              <h3 className="font-semibold text-lg mt-1 mb-3">{s.title}</h3>
+              <p className="text-sm text-muted-foreground mb-4">{s.desc}</p>
+              <span className="inline-block font-mono text-xs text-primary/50 px-3 py-1 rounded-full bg-primary/5">
+                {s.example}
+              </span>
             </div>
-            <span className="text-xs text-primary font-mono font-bold">{s.num}</span>
-            <h3 className="font-display font-semibold text-lg mt-2 mb-2">{s.title}</h3>
-            <p className="text-sm text-muted-foreground">{s.desc}</p>
           </motion.div>
         ))}
       </div>
