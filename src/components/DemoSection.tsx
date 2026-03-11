@@ -51,7 +51,7 @@ const DemoSection = () => (
             <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/5 border border-primary/10">
               <div className="w-2 h-2 rounded-full bg-primary animate-pulse-glow" />
               <span className="font-mono text-xs text-primary/80">
-                Analyzing intent → Generating presentation editor → Loading AI templates...
+                Analyzing intent → Generating presentation editor → Loading AI templates → Publishing to marketplace...
               </span>
             </div>
 

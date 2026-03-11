@@ -1,52 +1,58 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 
-const codeSnippets = [
-  "const ai =", "await gen()", "import {}", "=> {}", "async fn",
-  "0x1F4A1", "null", "true", "fetch()", "parse()",
-  "model.run", "token[]", "neural.init", "cpu.exec",
-  "void 0", "yield*", "::after", "0b1010", "new Map()",
-  "<T>", "Promise", "export", "return", "class AI",
-  "kernel.boot", "sys.call()", "pipe |>", "match =>",
+const codeLines = [
+  '<!DOCTYPE html>',
+  '<html lang="en">',
+  '<head>',
+  '  <meta charset="UTF-8" />',
+  '  <meta name="viewport" content="width=device-width" />',
+  '  <title>Klyron OS</title>',
+  '  <link rel="stylesheet" href="core.css" />',
+  '</head>',
+  '<body>',
+  '  <div id="klyron-root">',
+  '    <header class="os-shell">',
+  '      <nav class="intent-bar">',
+  '        <input type="text" placeholder="What do you need?" />',
+  '        <button class="ai-trigger">Execute</button>',
+  '      </nav>',
+  '    </header>',
+  '    <main class="workspace">',
+  '      <section class="tool-canvas">',
+  '        <div class="generated-ui" data-intent="active">',
+  '          <script type="module">',
+  '            import { AI } from "./core/engine.js";',
+  '            const os = new AI({ mode: "intent" });',
+  '            os.listen("user.command", async (e) => {',
+  '              const tool = await os.generate(e.intent);',
+  '              document.querySelector(".tool-canvas")',
+  '                .appendChild(tool.render());',
+  '            });',
+  '            os.on("ready", () => {',
+  '              console.log("Klyron OS v2.0 loaded");',
+  '              os.activate();',
+  '            });',
+  '          </script>',
+  '        </div>',
+  '        <aside class="ai-context-panel">',
+  '          <div class="memory-graph" />',
+  '          <div class="intent-history" />',
+  '        </aside>',
+  '      </section>',
+  '    </main>',
+  '    <footer class="os-status">',
+  '      <span class="uptime">System Active</span>',
+  '      <span class="ai-status">AI: Online</span>',
+  '    </footer>',
+  '  </div>',
+  '</body>',
+  '</html>',
 ];
-
-interface Particle {
-  x: number;
-  y: number;
-  text: string;
-  opacity: number;
-  size: number;
-  life: number;
-  maxLife: number;
-  fadeIn: boolean;
-}
 
 const CursorCodeEffect = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const particles = useRef<Particle[]>([]);
-  const mouse = useRef({ x: -100, y: -100 });
+  const mouse = useRef({ x: -1000, y: -1000 });
   const animFrame = useRef<number>(0);
-  const lastSpawn = useRef(0);
-
-  const spawn = useCallback((x: number, y: number) => {
-    // Place 1-2 static snippets around the cursor
-    const count = 1 + Math.floor(Math.random() * 2);
-    for (let i = 0; i < count; i++) {
-      const maxLife = 0.6 + Math.random() * 0.6;
-      particles.current.push({
-        x: x + (Math.random() - 0.5) * 120,
-        y: y + (Math.random() - 0.5) * 120,
-        text: codeSnippets[Math.floor(Math.random() * codeSnippets.length)],
-        opacity: 0,
-        size: 10 + Math.random() * 3,
-        life: maxLife,
-        maxLife,
-        fadeIn: true,
-      });
-    }
-    if (particles.current.length > 40) {
-      particles.current = particles.current.slice(-40);
-    }
-  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -63,46 +69,73 @@ const CursorCodeEffect = () => {
 
     const onMove = (e: MouseEvent) => {
       mouse.current = { x: e.clientX, y: e.clientY };
-      const now = Date.now();
-      if (now - lastSpawn.current > 80) {
-        spawn(mouse.current.x, mouse.current.y);
-        lastSpawn.current = now;
-      }
     };
     window.addEventListener("mousemove", onMove);
 
+    const lineHeight = 20;
+    const startX = 40;
+    const revealRadius = 250;
+
     const loop = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font = '13px "JetBrains Mono", monospace';
 
-      particles.current.forEach((p) => {
-        p.life -= 0.008;
+      const mx = mouse.current.x;
+      const my = mouse.current.y + window.scrollY;
 
-        // Fade in quickly, then hold, then fade out
-        const progress = 1 - p.life / p.maxLife;
-        if (progress < 0.15) {
-          p.opacity = (progress / 0.15) * 0.25;
-        } else if (p.life < 0.2) {
-          p.opacity = (p.life / 0.2) * 0.25;
-        } else {
-          p.opacity = 0.25;
+      // Calculate how many lines fit on the page
+      const totalHeight = Math.max(document.documentElement.scrollHeight, canvas.height);
+      const scrollY = window.scrollY;
+
+      // Only render lines visible in viewport (with buffer)
+      const firstVisibleLine = Math.max(0, Math.floor((scrollY - 100) / lineHeight));
+      const lastVisibleLine = Math.min(codeLines.length - 1, Math.ceil((scrollY + canvas.height + 100) / lineHeight));
+
+      for (let i = firstVisibleLine; i <= lastVisibleLine; i++) {
+        const lineText = codeLines[i % codeLines.length];
+        const y = (i * lineHeight + 14) - scrollY;
+
+        // Calculate distance from mouse to this line
+        const lineCenterY = i * lineHeight + 10;
+        const dx = mx - startX - (lineText.length * 3.5);
+        const dy = my - lineCenterY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < revealRadius) {
+          const opacity = Math.max(0, 0.35 * (1 - dist / revealRadius));
+          
+          // Color keywords differently
+          const indent = lineText.length - lineText.trimStart().length;
+          const trimmed = lineText.trimStart();
+          
+          if (trimmed.startsWith('<') || trimmed.startsWith('</')) {
+            ctx.fillStyle = `hsla(185, 100%, 55%, ${opacity})`;
+          } else if (trimmed.startsWith('import') || trimmed.startsWith('const') || trimmed.startsWith('await') || trimmed.startsWith('async')) {
+            ctx.fillStyle = `hsla(270, 100%, 70%, ${opacity})`;
+          } else if (trimmed.startsWith('//') || trimmed.startsWith('console')) {
+            ctx.fillStyle = `hsla(120, 40%, 50%, ${opacity})`;
+          } else {
+            ctx.fillStyle = `hsla(200, 60%, 60%, ${opacity})`;
+          }
+
+          ctx.fillText(lineText, startX, y);
         }
+      }
 
-        ctx.fillStyle = `hsla(185, 100%, 55%, ${p.opacity})`;
-        ctx.font = `${p.size}px "JetBrains Mono", monospace`;
-        ctx.fillText(p.text, p.x, p.y);
-      });
-
-      particles.current = particles.current.filter((p) => p.life > 0);
       animFrame.current = requestAnimationFrame(loop);
     };
     loop();
+
+    const onScroll = () => {}; // loop handles it via scrollY
+    window.addEventListener("scroll", onScroll);
 
     return () => {
       cancelAnimationFrame(animFrame.current);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("resize", resize);
+      window.removeEventListener("scroll", onScroll);
     };
-  }, [spawn]);
+  }, []);
 
   return (
     <canvas
