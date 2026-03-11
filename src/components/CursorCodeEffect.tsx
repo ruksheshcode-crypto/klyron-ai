@@ -14,10 +14,10 @@ interface Particle {
   y: number;
   text: string;
   opacity: number;
-  vx: number;
-  vy: number;
   size: number;
   life: number;
+  maxLife: number;
+  fadeIn: boolean;
 }
 
 const CursorCodeEffect = () => {
@@ -28,22 +28,23 @@ const CursorCodeEffect = () => {
   const lastSpawn = useRef(0);
 
   const spawn = useCallback((x: number, y: number) => {
+    // Place 1-2 static snippets around the cursor
     const count = 1 + Math.floor(Math.random() * 2);
     for (let i = 0; i < count; i++) {
+      const maxLife = 0.6 + Math.random() * 0.6;
       particles.current.push({
-        x: x + (Math.random() - 0.5) * 40,
-        y: y + (Math.random() - 0.5) * 40,
+        x: x + (Math.random() - 0.5) * 120,
+        y: y + (Math.random() - 0.5) * 120,
         text: codeSnippets[Math.floor(Math.random() * codeSnippets.length)],
-        opacity: 0.4 + Math.random() * 0.3,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: -0.3 - Math.random() * 0.7,
+        opacity: 0,
         size: 10 + Math.random() * 3,
-        life: 1,
+        life: maxLife,
+        maxLife,
+        fadeIn: true,
       });
     }
-    // cap particles
-    if (particles.current.length > 60) {
-      particles.current = particles.current.slice(-60);
+    if (particles.current.length > 40) {
+      particles.current = particles.current.slice(-40);
     }
   }, []);
 
@@ -55,20 +56,15 @@ const CursorCodeEffect = () => {
 
     const resize = () => {
       canvas.width = window.innerWidth;
-      canvas.height = document.documentElement.scrollHeight;
+      canvas.height = window.innerHeight;
     };
     resize();
     window.addEventListener("resize", resize);
 
-    const onScroll = () => {
-      canvas.height = document.documentElement.scrollHeight;
-    };
-    window.addEventListener("scroll", onScroll);
-
     const onMove = (e: MouseEvent) => {
-      mouse.current = { x: e.clientX, y: e.clientY + window.scrollY };
+      mouse.current = { x: e.clientX, y: e.clientY };
       const now = Date.now();
-      if (now - lastSpawn.current > 60) {
+      if (now - lastSpawn.current > 80) {
         spawn(mouse.current.x, mouse.current.y);
         lastSpawn.current = now;
       }
@@ -77,15 +73,21 @@ const CursorCodeEffect = () => {
 
     const loop = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.font = '12px "JetBrains Mono", monospace';
 
       particles.current.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
         p.life -= 0.008;
-        p.opacity = Math.max(0, p.life * 0.35);
 
-        ctx.fillStyle = `hsla(185, 100%, 50%, ${p.opacity})`;
+        // Fade in quickly, then hold, then fade out
+        const progress = 1 - p.life / p.maxLife;
+        if (progress < 0.15) {
+          p.opacity = (progress / 0.15) * 0.25;
+        } else if (p.life < 0.2) {
+          p.opacity = (p.life / 0.2) * 0.25;
+        } else {
+          p.opacity = 0.25;
+        }
+
+        ctx.fillStyle = `hsla(185, 100%, 55%, ${p.opacity})`;
         ctx.font = `${p.size}px "JetBrains Mono", monospace`;
         ctx.fillText(p.text, p.x, p.y);
       });
@@ -99,7 +101,6 @@ const CursorCodeEffect = () => {
       cancelAnimationFrame(animFrame.current);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("resize", resize);
-      window.removeEventListener("scroll", onScroll);
     };
   }, [spawn]);
 
