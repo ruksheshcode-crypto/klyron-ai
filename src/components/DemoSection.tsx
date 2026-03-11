@@ -59,7 +59,7 @@ const DemoSection = () => (
             <div className="glass rounded-xl p-5 gradient-border">
               <div className="flex items-center justify-between mb-4">
                 <span className="font-mono text-xs text-primary/60">Generated Tool: Presentation Editor</span>
-                <span className="text-xs text-muted-foreground/50 font-mono">ready in 0.3s</span>
+                <span className="text-xs text-muted-foreground/50 font-mono">ready in ~2 min</span>
               </div>
               <div className="grid grid-cols-4 gap-2 mb-4">
                 {["Slide 1", "Slide 2", "Slide 3", "+"].map((label) => (
