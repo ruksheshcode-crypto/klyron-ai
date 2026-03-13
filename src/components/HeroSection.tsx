@@ -126,7 +126,7 @@ const HeroSection = () => {
             className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-base px-8 glow-sm"
             asChild
           >
-            <a href="mailto:ruksheshcode@gmail.com?subject=Early%20Access%20Request&body=I%20want%20to%20join%20the%20future%20of%20computing">
+            <a href="mailto:aradhya@klyron.io,rukshesh@klyron.io?subject=Early%20Access%20Request&body=I%20want%20to%20join%20the%20future%20of%20computing">
               Join the Future <ArrowRight className="ml-2 h-4 w-4" />
             </a>
           </Button>

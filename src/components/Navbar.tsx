@@ -92,7 +92,7 @@ const Navbar = () => {
             </a>
           ))}
           <Button size="sm" className="w-full bg-primary text-primary-foreground text-xs" asChild>
-            <a href="mailto:ruksheshcode@gmail.com?subject=Early%20Access%20Request&body=I%20want%20to%20join%20the%20future%20of%20computing" onClick={() => setIsOpen(false)}>
+            <a href="mailto:aradhya@klyron.io,rukshesh@klyron.io?subject=Early%20Access%20Request&body=I%20want%20to%20join%20the%20future%20of%20computing" onClick={() => setIsOpen(false)}>
               Early Access
             </a>
           </Button>
