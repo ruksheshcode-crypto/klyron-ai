@@ -86,7 +86,7 @@ const EarlyDev = () => {
               className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-base px-10 glow-sm"
               asChild
             >
-              <a href="mailto:ruksheshcode@gmail.com?subject=Early%20Dev%20Program%20Application&body=I%20want%20to%20join%20the%20Early%20Dev%20Program%20for%20Klyron%20OS">
+              <a href="mailto:aradhya@klyron.io,rukshesh@klyron.io?subject=Early%20Dev%20Program%20Application&body=I%20want%20to%20join%20the%20Early%20Dev%20Program%20for%20Klyron%20OS">
                 Apply Now — It's Free
               </a>
             </Button>
